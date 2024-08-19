@@ -10,7 +10,11 @@ const nextConfig = {
         pathname: '/my-bucket/**',
       },
     ],
+    domains: [
+      'files.stripe.com',
+    ],
   },
 };
 
 export default nextConfig;
+
