@@ -1,17 +1,15 @@
 import { useParams } from 'next/navigation';
-import { useEffect } from 'react';
-
 
 export default function Product() {
     const params = useParams();
+
+    // Check if params exists and has an id
+    if (!params || !params.id) {
+        return <div>Loading...</div>;
+    }
+
     const { id } = params;
-    console.log("🚀 ~ Product ~ id:", id)
-
-
-    useEffect(() => {
-        console.log("🚀 ~ Product ~ params:", params)
-    }, [params])
-
+    console.log("🚀 ~ Product ~ id:", id);
 
     return (
         <div>
@@ -19,6 +17,3 @@ export default function Product() {
         </div>
     );
 }
-
-
-
