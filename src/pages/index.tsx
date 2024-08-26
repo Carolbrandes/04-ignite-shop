@@ -48,27 +48,30 @@ export default function Home({ products }: HomeProps) {
 //* qd estamos usando static generarion nao temos acesso ao ctx da requisicao, nem ao res e nem ao req como no ssr. Entao nao teriamos acesso ao email de um usuario, cookies, headers. Ele funciona qd fazemos o build da aplicacao. Aqui as paginas vao ser iguais para todos usuario que acessarem ela. 
 export const getStaticProps: GetStaticProps = async () => {
   const response = await stripe.products.list({
-    expand: ['data.default_price']
-  })
-  console.log("🚀 ~ getStaticProps ~ response:", response.data)
+    expand: ['data.default_price'],
+  });
+  console.log("🚀 ~ getStaticProps ~ response:", response.data);
 
-  const products = response.data.map(product => {
-    const price = product.default_price as Stripe.Price
+  const products = response.data.map((product) => {
+    const price = product.default_price as Stripe.Price;
 
     return {
       id: product.id,
       name: product.name,
       imageUrl: product.images[0],
-      price: price.unit_amount
-    }
-  })
+      price: price?.unit_amount
+        ? new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+          }).format(price.unit_amount / 100)
+        : 'Preço não disponível', // Fallback if unit_amount is null or undefined
+    };
+  });
 
   return {
     props: {
-      products
+      products,
     },
-    revalidate: 60 * 60 * 2 //* 2 hours
-  }
-
-
-}
+    revalidate: 60 * 60 * 2, // 2 hours
+  };
+};
