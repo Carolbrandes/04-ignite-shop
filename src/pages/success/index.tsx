@@ -33,6 +33,15 @@ export default function Success({ customerName, product }: SuccessProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+    if (!query.session_id) {
+        return {
+            redirect: {
+                destination: "/",
+                permanent: false
+            }
+        }
+    }
+
     const sessionId = String(query.session_id)
 
     // Retrieve the session and expand line items and products
